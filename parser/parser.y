@@ -43,6 +43,7 @@ import (
 	offset int // offset
 	item interface{}
 	ident string
+	statement ast.StmtNode
 }
 
 %token	<ident>
@@ -412,21 +413,61 @@ import (
 	paramMarker	"?"
 	rsh		">>"
 
-%type   <item>
+%type	<statement>
 	AdminStmt			"Check table statement or show ddl statement"
 	AlterTableStmt			"Alter table statement"
-	AlterTableSpec			"Alter table specification"
-	AlterTableSpecList		"Alter table specification list"
 	AlterUserStmt			"Alter user statement"
 	AnalyzeTableStmt		"Analyze table statement"
+	BeginTransactionStmt		"BEGIN TRANSACTION statement"
+	BinlogStmt			"Binlog base64 statement"
+	CommitStmt			"COMMIT statement"
+	CreateTableStmt			"CREATE TABLE statement"
+	CreateUserStmt			"CREATE User statement"
+	CreateDatabaseStmt		"Create Database Statement"
+	CreateIndexStmt			"CREATE INDEX statement"
+	DoStmt				"Do statement"
+	DropDatabaseStmt		"DROP DATABASE statement"
+	DropIndexStmt			"DROP INDEX statement"
+	DropStatsStmt			"DROP STATS statement"
+	DropTableStmt			"DROP TABLE statement"
+	DropUserStmt			"DROP USER"
+	DropViewStmt			"DROP VIEW statement"
+	DeallocateStmt			"Deallocate prepared statement"
+	DeleteFromStmt			"DELETE FROM statement"
+	EmptyStmt			"empty statement"
+	ExecuteStmt			"Execute statement"
+	ExplainStmt			"EXPLAIN statement"
+	FlushStmt			"Flush statement"
+	GrantStmt			"Grant statement"
+	InsertIntoStmt			"INSERT INTO statement"
+	KillStmt			"Kill statement"
+	LoadDataStmt			"Load data statement"
+	LockTablesStmt			"Lock tables statement"
+	PreparedStmt			"PreparedStmt"
+	SelectStmt			"SELECT statement"
+	RenameTableStmt         	"rename table statement"
+	ReplaceIntoStmt			"REPLACE INTO statement"
+	RevokeStmt			"Revoke statement"
+	RollbackStmt			"ROLLBACK statement"
+	SetStmt				"Set variable statement"
+	ShowStmt			"Show engines/databases/tables/columns/warnings/status statement"
+	Statement			"statement"
+	ExplainableStmt			"explainable statement"
+	TruncateTableStmt	"TRANSACTION TABLE statement"
+	UnlockTablesStmt	"Unlock tables statement"
+	UpdateStmt		"UPDATE statement"
+	UnionStmt		"Union select state ment"
+	UseStmt			"USE statement"
+
+%type   <item>
+	AlterTableSpec			"Alter table specification"
+	AlterTableSpecList		"Alter table specification list"
 	AnyOrAll			"Any or All for subquery"
 	Assignment			"assignment"
 	AssignmentList			"assignment list"
 	AssignmentListOpt		"assignment list opt"
 	AuthOption			"User auth option"
 	AuthString			"Password string value"
-	BeginTransactionStmt		"BEGIN TRANSACTION statement"
-	BinlogStmt			"Binlog base64 statement"
 	OptionalBraces			"optional braces"
 	CastType			"Cast function target type"
 	CharsetName			"Character set name"
@@ -437,7 +478,6 @@ import (
 	ColumnNameListOptWithBrackets 	"column name list opt with brackets"
 	ColumnSetValue			"insert statement set value by column name"
 	ColumnSetValueList		"insert statement set value by column name list"
-	CommitStmt			"COMMIT statement"
 	CompareOp			"Compare opcode"
 	ColumnOption			"column definition option"
 	ColumnOptionList		"column definition option list"
@@ -446,36 +486,20 @@ import (
 	Constraint			"table constraint"
 	ConstraintElem			"table constraint element"
 	ConstraintKeywordOpt		"Constraint Keyword or empty"
-	CreateDatabaseStmt		"Create Database Statement"
-	CreateIndexStmt			"CREATE INDEX statement"
 	CreateIndexStmtUnique		"CREATE INDEX optional UNIQUE clause"
 	DatabaseOption			"CREATE Database specification"
 	DatabaseOptionList		"CREATE Database specification list"
 	DatabaseOptionListOpt		"CREATE Database specification list opt"
-	CreateTableStmt			"CREATE TABLE statement"
-	CreateUserStmt			"CREATE User statement"
 	DBName				"Database Name"
-	DeallocateStmt			"Deallocate prepared statement"
 	DefaultValueExpr		"DefaultValueExpr(Now or Signed Literal)"
-	DeleteFromStmt			"DELETE FROM statement"
 	DistinctOpt			"Explicit distinct option"
 	DefaultFalseDistinctOpt		"Distinct option which defaults to false"
 	DefaultTrueDistinctOpt		"Distinct option which defaults to true"
 	BuggyDefaultFalseDistinctOpt	"Distinct option which accepts DISTINCT ALL and defaults to false"
-	DoStmt				"Do statement"
-	DropDatabaseStmt		"DROP DATABASE statement"
-	DropIndexStmt			"DROP INDEX statement"
-	DropStatsStmt			"DROP STATS statement"
-	DropTableStmt			"DROP TABLE statement"
-	DropUserStmt			"DROP USER"
-	DropViewStmt			"DROP VIEW statement"
-	EmptyStmt			"empty statement"
 	Enclosed			"Enclosed by"
 	EqOpt				"= or empty"
 	EscapedTableRef 		"escaped table reference"
 	Escaped				"Escaped by"
-	ExecuteStmt			"Execute statement"
-	ExplainStmt			"EXPLAIN statement"
 	Expression			"expression"
 	ExpressionList			"expression list"
 	ExpressionListOpt		"expression list opt"
@@ -490,7 +514,6 @@ import (
 	FieldAsName			"Field alias name"
 	FieldAsNameOpt			"Field alias name opt"
 	FieldList			"field expression list"
-	FlushStmt			"Flush statement"
 	FlushOption			"Flush option"
 	TableRefsClause			"Table references clause"
 	SumExpr				"aggregate functions"
@@ -499,7 +522,6 @@ import (
 	FunctionCallNonKeyword		"Function call with nonkeyword as function name"
 	FuncDatetimePrec		"Function datetime precision"
 	GlobalScope			"The scope of variable"
-	GrantStmt			"Grant statement"
 	GroupByClause			"GROUP BY clause"
 	HashString			"Hashed string"
 	HavingClause			"HAVING clause"
@@ -519,11 +541,9 @@ import (
 	IndexOptionList			"Index Option List or empty"
 	IndexType			"index type"
 	IndexTypeOpt			"Optional index type"
-	InsertIntoStmt			"INSERT INTO statement"
 	InsertValues			"Rest part of INSERT/REPLACE INTO statement"
 	JoinTable 			"join table"
 	JoinType			"join type"
-	KillStmt			"Kill statement"
 	KillOrKillTiDB			"Kill or Kill TiDB"
 	LikeEscapeOpt 			"like escape option"
 	LimitClause			"LIMIT clause"
@@ -531,9 +551,7 @@ import (
 	Lines				"Lines clause"
 	LinesTerminated			"Lines terminated by"
 	Literal				"literal value"
-	LoadDataStmt			"Load data statement"
 	LocalOpt			"Local opt"
-	LockTablesStmt			"Lock tables statement"
 	LockClause         		"Alter table lock clause"
 	LowPriorityOptional		"LOW_PRIORITY or empty"
 	NumLiteral			"Num/Int/Float/Decimal Literal"
@@ -557,7 +575,6 @@ import (
 	PartDefStorageOpt		"ENGINE = xxx or empty"
 	PasswordOpt			"Password option"
 	ColumnPosition			"Column position [First|After ColumnName]"
-	PreparedStmt			"PreparedStmt"
 	PrepareSQL			"Prepare statement sql string"
 	SimpleExpr			"simple expression"
 	BitExpr				"bit expression"
@@ -570,15 +587,10 @@ import (
 	OnDeleteOpt			"optional ON DELETE clause"
 	OnUpdateOpt			"optional ON UPDATE clause"
 	ReferOpt			"reference option"
-	RenameTableStmt         	"rename table statement"
-	ReplaceIntoStmt			"REPLACE INTO statement"
 	ReplacePriority			"replace statement priority"
-	RevokeStmt			"Revoke statement"
-	RollbackStmt			"ROLLBACK statement"
 	RowFormat			"Row format option"
 	RowValue			"Row value"
 	SelectLockOpt			"FOR UPDATE or LOCK IN SHARE MODE,"
-	SelectStmt			"SELECT statement"
 	SelectStmtCalcFoundRows		"SELECT statement optional SQL_CALC_FOUND_ROWS"
 	SelectStmtSQLCache		"SELECT statement optional SQL_CAHCE/SQL_NO_CACHE"
 	SelectStmtFieldList		"SELECT statement field list"
@@ -586,8 +598,6 @@ import (
 	SelectStmtOpts			"Select statement options"
 	SelectStmtGroup			"SELECT statement optional GROUP BY clause"
 	SetExpr				"Set variable statement value's expression"
-	SetStmt				"Set variable statement"
-	ShowStmt			"Show engines/databases/tables/columns/warnings/status statement"
 	ShowTargetFilterable    	"Show target that can be filtered by WHERE or LIKE"
 	ShowDatabaseNameOpt		"Show tables/columns statement database name option"
 	ShowTableAliasOpt       	"Show table alias option"
@@ -595,13 +605,11 @@ import (
 	SignedLiteral			"Literal or NumLiteral with sign"
 	SimpleIdent			"Simple Identifier expression"
 	Starting			"Starting by"
-	Statement			"statement"
 	StatementList			"statement list"
 	StatsPersistentVal		"stats_persistent value"
 	StringName			"string literal or identifier"
 	StringList 			"string list"
 	StringLiteral			"text literal"
-	ExplainableStmt			"explainable statement"
 	SubSelect			"Sub Select"
 	Symbol				"Constraint Symbol"
 	SystemVariable			"System defined variable name"
@@ -626,20 +634,15 @@ import (
 	TransactionChar		"Transaction characteristic"
 	TransactionChars	"Transaction characteristic list"
 	TrimDirection		"Trim string direction"
-	TruncateTableStmt	"TRANSACTION TABLE statement"
 	UnionOpt		"Union Option(empty/ALL/DISTINCT)"
-	UnionStmt		"Union select state ment"
 	UnionClauseList		"Union select clause list"
 	UnionSelect		"Union (select) item"
-	UnlockTablesStmt	"Unlock tables statement"
-	UpdateStmt		"UPDATE statement"
 	Username		"Username"
 	UsernameList		"UsernameList"
 	UserSpec		"Username and auth option"
 	UserSpecList		"Username and auth option list"
 	UserVariable		"User defined variable name"
 	UserVariableList	"User defined variable name list"
-	UseStmt			"USE statement"
 	Values			"values"
 	ValuesList		"values list"
 	ValuesOpt		"values optional"
@@ -1789,14 +1792,14 @@ ExplainStmt:
 |	ExplainSym ExplainableStmt
 	{
 		$$ = &ast.ExplainStmt{
-			Stmt:	$2.(ast.StmtNode),
+			Stmt:	$2,
 			Format: "row",
 		}
 	}
 |	ExplainSym "FORMAT" "=" stringLit ExplainableStmt
 	{
 		$$ = &ast.ExplainStmt{
-			Stmt:	$5.(ast.StmtNode),
+			Stmt:	$5,
 			Format: $4,
 		}
 	}
@@ -4154,10 +4157,9 @@ UnionSelect:
 	SelectStmt
 |	'(' SelectStmt ')'
 	{
-		st := $2.(*ast.SelectStmt)
 		endOffset := parser.endOffset(&yyS[yypt])
 		parser.setLastSelectFieldText(st, endOffset)
-		$$ = st
+		$$ = $2
 	}
 
 UnionOpt:
@@ -4807,12 +4809,6 @@ Statement:
 |	TruncateTableStmt
 |	UpdateStmt
 |	UseStmt
-|	SubSelect
-	{
-		// `(select 1)`; is a valid select statement
-		// TODO: This is used to fix issue #320. There may be a better solution.
-		$$ = $1.(*ast.SubqueryExpr).Query
-	}
 |	UnlockTablesStmt
 |	LockTablesStmt
 
@@ -4828,7 +4824,19 @@ StatementList:
 	Statement
 	{
 		if $1 != nil {
-			s := $1.(ast.StmtNode)
+			s := $1
+			if lexer, ok := yylex.(stmtTexter); ok {
+				s.SetText(lexer.stmtText())
+			}
+			parser.result = append(parser.result, s)
+		}
+	}
+|	SubSelect
+	{
+		// `(select 1)`; is a valid select statement
+		// TODO: This is used to fix issue #320. There may be a better solution.
+		if $1 != nil {
+			s := $1.(*ast.SubqueryExpr).Query
 			if lexer, ok := yylex.(stmtTexter); ok {
 				s.SetText(lexer.stmtText())
 			}
@@ -4838,7 +4846,7 @@ StatementList:
 |	StatementList ';' Statement
 	{
 		if $3 != nil {
-			s := $3.(ast.StmtNode)
+			s := $3
 			if lexer, ok := yylex.(stmtTexter); ok {
 				s.SetText(lexer.stmtText())
 			}
